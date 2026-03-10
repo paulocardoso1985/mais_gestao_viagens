@@ -68,8 +68,8 @@ export default function AuthGate({ children }) {
             setError('Os PINs não coincidem');
             return;
         }
-        if (newPassword.length < 4) {
-            setError('O PIN deve ter pelo menos 4 dígitos');
+        if (newPassword.length < 1) {
+            setError('O PIN não pode ser vazio');
             return;
         }
 
@@ -161,7 +161,6 @@ export default function AuthGate({ children }) {
                                     onChange={(e) => setPassword(e.target.value)}
                                     className="w-full bg-white/10 border border-white/10 group-hover:border-white/30 focus:bg-white/20 rounded-2xl px-6 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-[#f37021]/20 focus:border-[#f37021] transition-all duration-300 font-bold"
                                     placeholder="••••"
-                                    maxLength={4}
                                 />
                             </div>
 
@@ -177,7 +176,6 @@ export default function AuthGate({ children }) {
                                             onChange={(e) => setNewPassword(e.target.value)}
                                             className="w-full bg-white/10 border border-[#f37021]/30 focus:border-[#f37021] rounded-2xl px-6 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-[#f37021]/20 transition-all font-bold"
                                             placeholder="••••"
-                                            maxLength={4}
                                         />
                                     </div>
                                     <div className="relative group animate-in slide-in-from-top-2 duration-500">
@@ -190,7 +188,6 @@ export default function AuthGate({ children }) {
                                             onChange={(e) => setConfirmPassword(e.target.value)}
                                             className="w-full bg-white/10 border border-[#f37021]/30 focus:border-[#f37021] rounded-2xl px-6 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-[#f37021]/20 transition-all font-bold"
                                             placeholder="••••"
-                                            maxLength={4}
                                         />
                                     </div>
                                 </>
