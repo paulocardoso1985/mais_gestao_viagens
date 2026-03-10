@@ -1,6 +1,6 @@
 import Papa from 'papaparse';
 
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = '/api';
 
 export const UF_COORDS = {
     'AC': [-9.02, -70.52], 'AL': [-9.57, -36.78], 'AP': [1.41, -51.77], 'AM': [-3.41, -65.05],

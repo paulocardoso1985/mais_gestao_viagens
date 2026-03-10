@@ -2,12 +2,13 @@ const nodemailer = require('nodemailer');
 
 // For development, we'll use a local log approach if credentials aren't provided
 // In production, the user would provide real SMTP settings
+// Use environment variables for SMTP, or fallback to Ethereal (dummy) for testing
 const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
+    host: process.env.SMTP_HOST || 'smtp.ethereal.email',
+    port: parseInt(process.env.SMTP_PORT || '587'),
     auth: {
-        user: 'test.user@ethereal.email',
-        pass: 'test.pass'
+        user: process.env.SMTP_USER || 'test.user@ethereal.email',
+        pass: process.env.SMTP_PASS || 'test.pass'
     }
 });
 
