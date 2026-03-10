@@ -6,14 +6,17 @@ const path = require('path');
 const { sendEmail } = require('./mailer.cjs');
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-app.get('/', (req, res) => {
-    res.send('Mais Corporativo API is running. Use /api endpoint for data.');
+// Serve static files from the React build folder
+app.use(express.static(path.join(__dirname, 'dist')));
+
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', message: 'Mais Corporativo API is running' });
 });
 
 // --- AUTH ---
@@ -324,18 +327,17 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
-// --- SYSTEM LOGS ---
-app.get('/api/logs', (req, res) => {
-    const logs = db.prepare('SELECT * FROM logs ORDER BY timestamp DESC LIMIT 100').all();
-    res.json(logs);
-});
-
 app.post('/api/logs', (req, res) => {
     const { user, action, details } = req.body;
     db.prepare('INSERT INTO logs (user, action, details) VALUES (?, ?, ?)').run(user, action, details);
     res.json({ success: true });
 });
 
+// Fallback for React SPA Routing
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server running on port ${port}`);
 });

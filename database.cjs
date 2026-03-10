@@ -1,7 +1,14 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+const fs = require('fs');
 
-const dbPath = path.resolve(__dirname, 'data.db');
+// Path for Docker persistence (Volume mount point)
+const dbDir = process.env.NODE_ENV === 'production' ? '/app/data' : '.';
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+}
+
+const dbPath = path.join(dbDir, 'data.db');
 const db = new Database(dbPath);
 
 // Initialize tables
