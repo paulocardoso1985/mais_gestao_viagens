@@ -18,8 +18,6 @@ COPY --from=build /app/*.cjs ./
 # Database folder for persistence (volume mount point)
 RUN mkdir -p /app/data
 
-EXPOSE 3001
-ENV PORT=3001
 ENV NODE_ENV=production
 
 CMD ["node", "server.cjs"]
