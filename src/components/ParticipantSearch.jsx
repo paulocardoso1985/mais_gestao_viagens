@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Info, Plane, CreditCard, ShieldAlert, Phone, X, Mail, Smartphone, Fingerprint, ChevronRight, Users, AlertTriangle } from 'lucide-react';
+import { Search, Info, Plane, CreditCard, ShieldAlert, Phone, X, Mail, Smartphone, Fingerprint, ChevronRight, Users, AlertTriangle, Calendar, Globe, Compass } from 'lucide-react';
 import ParticipantsMap from './ParticipantsMap';
 
 export default function ParticipantSearch({ participants, selectedCity, typeFilter, tourFilter, allergyFilter, onCityClear, onTypeClear, onTourClear, onAllergyClear }) {
