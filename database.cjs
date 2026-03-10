@@ -85,6 +85,16 @@ db.exec(`
     module TEXT,
     item TEXT
   );
-`);
+// Seed default admin if empty
+const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get().count;
+if (userCount === 0) {
+    db.prepare('INSERT INTO users (username, pin, name, role) VALUES (?, ?, ?, ?)').run(
+        'paulo',
+        '1234',
+        'Paulo Cardoso',
+        'ADMIN'
+    );
+    console.log('Seeded default admin user: paulo / 1234');
+}
 
 module.exports = db;
