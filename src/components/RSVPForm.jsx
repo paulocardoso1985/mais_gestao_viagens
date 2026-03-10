@@ -243,10 +243,10 @@ export default function RSVPForm({ isOpen, onClose, onSuccess, isAdmin = false, 
                                             <Phone className="w-3 h-3" /> Contato de Emergência
                                         </label>
                                         <div className="space-y-3">
-                                            <input required name="emergencyName" value={formData.emergencyName} placeholder="Nome do Contato" className="w-full px-3 py-2 bg-slate-50 border border-slate-100 rounded-lg outline-none text-sm font-bold" />
+                                            <input required name="emergencyName" value={formData.emergencyName} onChange={handleChange} placeholder="Nome do Contato" className="w-full px-3 py-2 bg-slate-50 border border-slate-100 rounded-lg outline-none text-sm font-bold" />
                                             <div className="grid grid-cols-2 gap-2">
-                                                <input required name="emergencyRelationship" value={formData.emergencyRelationship} placeholder="Parentesco" className="w-full px-3 py-2 bg-slate-50 border border-slate-100 rounded-lg outline-none text-sm" />
-                                                <input required name="emergencyPhone" value={formData.emergencyPhone} placeholder="Telefone" className="w-full px-3 py-2 bg-slate-50 border border-slate-100 rounded-lg outline-none text-sm font-bold" />
+                                                <input required name="emergencyRelationship" value={formData.emergencyRelationship} onChange={handleChange} placeholder="Parentesco" className="w-full px-3 py-2 bg-slate-50 border border-slate-100 rounded-lg outline-none text-sm" />
+                                                <input required name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} placeholder="Telefone" className="w-full px-3 py-2 bg-slate-50 border border-slate-100 rounded-lg outline-none text-sm font-bold" />
                                             </div>
                                         </div>
                                     </div>
