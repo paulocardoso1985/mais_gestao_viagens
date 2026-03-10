@@ -323,18 +323,8 @@ app.post('/api/logs', (req, res) => {
     res.json({ success: true });
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
-
-app.post('/api/logs', (req, res) => {
-    const { user, action, details } = req.body;
-    db.prepare('INSERT INTO logs (user, action, details) VALUES (?, ?, ?)').run(user, action, details);
-    res.json({ success: true });
-});
-
-// Fallback for React SPA Routing
-app.get('*', (req, res) => {
+// Fallback for React SPA Routing - Express 5 compatible syntax: (.*)
+app.get('(.*)', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
