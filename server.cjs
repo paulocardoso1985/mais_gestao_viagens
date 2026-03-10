@@ -323,9 +323,13 @@ app.post('/api/logs', (req, res) => {
     res.json({ success: true });
 });
 
-// Fallback for React SPA Routing - Express 5 compatible syntax: /:any*
-app.get('/:any*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+// Fallback for React SPA Routing - Middleware approach (robust for Express 5)
+app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api')) {
+        res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    } else {
+        next();
+    }
 });
 
 app.listen(port, () => {
