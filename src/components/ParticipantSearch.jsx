@@ -18,7 +18,10 @@ export default function ParticipantSearch({ participants, selectedCity, typeFilt
         const matchesTour = tourFilter !== 'all' ?
             (pTour === fTour || (fTour === 'Pendente' && (!pTour || pTour === 'Pendente'))) : true;
 
-        const matchesAllergy = allergyFilter !== 'all' ? (p.allergies && p.allergies.includes(allergyFilter)) : true;
+        const matchesAllergy = allergyFilter !== 'all' ? (
+            (p.allergies && p.allergies.includes(allergyFilter)) || 
+            (p.restrictions && p.restrictions.includes(allergyFilter))
+        ) : true;
         return matchesQuery && matchesCity && matchesType && matchesTour && matchesAllergy;
     }) || [];
 
@@ -132,7 +135,7 @@ export default function ParticipantSearch({ participants, selectedCity, typeFilt
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <div className="lg:col-span-2 space-y-6">
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                                     <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
                                         <div className="flex items-center gap-3 mb-2 text-slate-400">
                                             <Fingerprint className="w-4 h-4" />
@@ -140,15 +143,37 @@ export default function ParticipantSearch({ participants, selectedCity, typeFilt
                                         </div>
                                         <div className="text-slate-900 font-bold text-sm">{selected.cpf}</div>
                                     </div>
-                                    <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm sm:col-span-2">
+                                    <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                                        <div className="flex items-center gap-3 mb-2 text-slate-400">
+                                            <Calendar className="w-4 h-4" />
+                                            <span className="text-[10px] font-bold uppercase tracking-wider">Nascimento</span>
+                                        </div>
+                                        <div className="text-slate-900 font-bold text-sm">{selected.birthday || '---'}</div>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                                        <div className="flex items-center gap-3 mb-2 text-slate-400">
+                                            <Users className="w-4 h-4" />
+                                            <span className="text-[10px] font-bold uppercase tracking-wider">Gênero</span>
+                                        </div>
+                                        <div className="text-slate-900 font-bold text-sm">{selected.gender || '---'}</div>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                                        <div className="flex items-center gap-3 mb-2 text-slate-400">
+                                            <Globe className="w-4 h-4" />
+                                            <span className="text-[10px] font-bold uppercase tracking-wider">Nacionalidade</span>
+                                        </div>
+                                        <div className="text-slate-900 font-bold text-sm">{selected.nationality || '---'}</div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
                                         <div className="flex items-center gap-3 mb-2 text-slate-400">
                                             <Mail className="w-4 h-4" />
                                             <span className="text-[10px] font-bold uppercase tracking-wider">E-mail</span>
                                         </div>
                                         <div className="text-slate-900 font-bold text-sm break-all select-all" title="Clique para selecionar">{selected.email || 'Não informado'}</div>
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
                                         <div className="flex items-center gap-3 mb-2 text-slate-400">
                                             <Smartphone className="w-4 h-4" />
@@ -162,12 +187,13 @@ export default function ParticipantSearch({ participants, selectedCity, typeFilt
                                     <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
                                         <div className="flex items-center gap-3 mb-3 text-blue-600">
                                             <CreditCard className="w-5 h-5" />
-                                            <span className="text-xs font-bold uppercase tracking-wider">Documentação de Viagem</span>
+                                            <span className="text-xs font-bold uppercase tracking-wider">Passaporte</span>
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <div>
                                                 <div className="text-slate-500 text-[10px] uppercase font-bold mb-1">Número</div>
                                                 <div className="text-slate-900 font-bold text-lg tracking-tight">{selected.passport || 'Pendente'}</div>
+                                                <div className="text-[10px] text-slate-400 mt-1">Val: {selected.passportExpiryDate || '---'}</div>
                                             </div>
                                             {selected.passportPhoto && (
                                                 <a
@@ -176,17 +202,55 @@ export default function ParticipantSearch({ participants, selectedCity, typeFilt
                                                     rel="noopener noreferrer"
                                                     className="flex items-center gap-1.5 bg-blue-50 text-blue-600 px-3 py-2 rounded-xl text-xs font-bold hover:bg-blue-100 transition-colors"
                                                 >
-                                                    Visualizar Foto
+                                                    Ficha/Foto
                                                 </a>
                                             )}
                                         </div>
                                     </div>
                                     <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                                        <div className="flex items-center gap-3 mb-3 text-indigo-600">
+                                        <div className="flex items-center gap-3 mb-3 text-[#f37021]">
                                             <Plane className="w-5 h-5" />
-                                            <span className="text-xs font-bold uppercase tracking-wider">Experiência Mallorca</span>
+                                            <span className="text-xs font-bold uppercase tracking-wider">Visto Americano</span>
                                         </div>
-                                        <p className="text-slate-600 text-sm leading-relaxed">{selected.tour || 'Roteiro ainda não selecionado pelo participante.'}</p>
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <div className="text-slate-500 text-[10px] uppercase font-bold mb-1">Status</div>
+                                                <div className={`font-bold text-lg ${selected.usVisa === 'Sim' ? 'text-emerald-600' : 'text-slate-400'}`}>
+                                                    {selected.usVisa === 'Sim' ? 'POSSUI' : 'NÃO POSSUI'}
+                                                </div>
+                                                {selected.usVisa === 'Sim' && <div className="text-[10px] text-slate-400 mt-1">Val: {selected.usVisaExpiry || '---'}</div>}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                                        <div className="flex items-center gap-3 mb-3 text-indigo-600">
+                                            <Compass className="w-5 h-5" />
+                                            <span className="text-xs font-bold uppercase tracking-wider">Passeio Selecionado</span>
+                                        </div>
+                                        <div className="flex items-start gap-4">
+                                            <div className="flex-1">
+                                                <p className="text-slate-900 font-bold text-lg">{selected.tour || 'Pendente'}</p>
+                                                <p className="text-slate-500 text-[10px] uppercase font-bold mt-1">Mallorca Experience 2026</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                                        <div className="flex items-center gap-3 mb-3 text-amber-600">
+                                            <AlertTriangle className="w-5 h-5" />
+                                            <span className="text-xs font-bold uppercase tracking-wider">Assistência & Mobilidade</span>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <div className="text-slate-500 text-[10px] uppercase font-bold mb-1">Necessita?</div>
+                                                <div className={`font-bold text-lg ${selected.mobilityAssistance === 'Sim' ? 'text-amber-600' : 'text-slate-400'}`}>
+                                                    {selected.mobilityAssistance === 'Sim' ? 'SIM' : 'NÃO'}
+                                                </div>
+                                                {selected.mobilityDetails && <div className="text-[10px] text-slate-400 mt-1">{selected.mobilityDetails}</div>}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -197,13 +261,21 @@ export default function ParticipantSearch({ participants, selectedCity, typeFilt
                                             <span className="text-xs font-bold uppercase tracking-wider text-red-600">Restrições / Alergias</span>
                                         </div>
                                         <div className="space-y-1">
-                                            {selected.allergies && selected.allergies.length > 0 ? (
-                                                selected.allergies.map((all, i) => (
-                                                    <div key={i} className="text-red-900 font-bold flex items-start gap-2">
-                                                        <div className="w-1.5 h-1.5 bg-red-400 rounded-full mt-2 shrink-0"></div>
-                                                        {all}
-                                                    </div>
-                                                ))
+                                            {selected.allergies || selected.restrictions ? (
+                                                <>
+                                                    {selected.allergies && (
+                                                        <div className="text-red-900 font-bold flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-red-400 rounded-full mt-2 shrink-0"></div>
+                                                            {selected.allergies}
+                                                        </div>
+                                                    )}
+                                                    {selected.restrictions && (
+                                                        <div className="text-red-900 font-bold flex items-start gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-red-400 rounded-full mt-2 shrink-0"></div>
+                                                            {selected.restrictions}
+                                                        </div>
+                                                    )}
+                                                </>
                                             ) : (
                                                 <div className="text-red-900 font-bold opacity-50">Nenhuma informada</div>
                                             )}
@@ -215,8 +287,15 @@ export default function ParticipantSearch({ participants, selectedCity, typeFilt
                                             <Phone className="w-5 h-5" />
                                             <span className="text-xs font-bold uppercase tracking-wider text-blue-600">Contato de Emergência</span>
                                         </div>
-                                        <div className="text-blue-900 font-bold">{selected.emergency?.name || 'Não informado'}</div>
-                                        <div className="text-blue-700 text-sm font-medium">{selected.emergency?.phone}</div>
+                                        <div className="text-blue-900 font-bold">{selected.emergencyName || 'Não informado'}</div>
+                                        <div className="text-blue-700 text-sm font-black mt-1">
+                                            {selected.emergencyPhone}
+                                            {selected.emergencyRelationship && (
+                                                <span className="ml-2 px-2 py-0.5 bg-blue-100 rounded text-[10px] uppercase">
+                                                    {selected.emergencyRelationship}
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 

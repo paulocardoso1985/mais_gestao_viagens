@@ -131,7 +131,7 @@ export default function Overview({ summary, locations, typeFilter, onTypeFilterC
                 />
                 <StatCard
                     title="Catamaran"
-                    value={230}
+                    value={summary?.totalPessoas || 230}
                     icon={Anchor}
                     color="bg-orange-600"
                     details={[

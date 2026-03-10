@@ -87,11 +87,17 @@ app.post('/api/participants/import', (req, res) => {
     const { data } = req.body; 
     const insert = db.prepare(`
         INSERT OR REPLACE INTO participants (
-            id, type, name, email, phone, cpf, passport, passportPhoto, 
-            city, uf, airport, tour, allergies, emergency_name, emergency_phone, titularName
+            id, type, name, email, phone, cpf, birthday, gender, nationality,
+            passport, passportIssueDate, passportExpiryDate, passportPhoto,
+            usVisa, usVisaExpiry, city, uf, airport, tour, allergies,
+            restrictions, medicalConditions, mobilityAssistance, mobilityDetails,
+            emergencyName, emergencyRelationship, emergencyPhone, titularName, status
         ) VALUES (
-            @id, @type, @name, @email, @phone, @cpf, @passport, @passportPhoto, 
-            @city, @uf, @airport, @tour, @allergies, @emergency_name, @emergency_phone, @titularName
+            @id, @type, @name, @email, @phone, @cpf, @birthday, @gender, @nationality,
+            @passport, @passportIssueDate, @passportExpiryDate, @passportPhoto,
+            @usVisa, @usVisaExpiry, @city, @uf, @airport, @tour, @allergies,
+            @restrictions, @medicalConditions, @mobilityAssistance, @mobilityDetails,
+            @emergencyName, @emergencyRelationship, @emergencyPhone, @titularName, @status
         )
     `);
 
@@ -104,22 +110,44 @@ app.post('/api/participants/import', (req, res) => {
                 email: item.email || '',
                 phone: item.phone || '',
                 cpf: item.cpf || '',
+                birthday: item.birthday || '',
+                gender: item.gender || '',
+                nationality: item.nationality || '',
                 passport: item.passport || '',
+                passportIssueDate: item.passportIssueDate || '',
+                passportExpiryDate: item.passportExpiryDate || '',
                 passportPhoto: item.passportPhoto || '',
-                city: item.city || '',
-                uf: item.uf || '',
-                airport: item.airport || '',
-                tour: item.tour || '',
-                allergies: Array.isArray(item.allergies) ? item.allergies.join(', ') : (item.allergies || ''),
-                emergency_name: item.emergency?.name || item.emergency_name || '',
-                emergency_phone: item.emergency?.phone || item.emergency_phone || '',
-                titularName: item.titularName || ''
+                usVisa: item.usVisa || 'Não',
+                usVisaExpiry: item.usVisaExpiry || '',
+                city: (item.city || '').toUpperCase(),
+                uf: (item.uf || '').toUpperCase(),
+                airport: (item.airport || '').toUpperCase(),
+                tour: item.tour || 'Pendente',
+                allergies: item.allergies || '',
+                restrictions: item.restrictions || '',
+                medicalConditions: item.medicalConditions || '',
+                mobilityAssistance: item.mobilityAssistance || 'Não',
+                mobilityDetails: item.mobilityDetails || '',
+                emergencyName: item.emergencyName || '',
+                emergencyRelationship: item.emergencyRelationship || '',
+                emergencyPhone: item.emergencyPhone || '',
+                titularName: item.titularName || '',
+                status: item.status || 'Confirmado'
             });
         }
     });
 
     transaction(data);
     res.json({ success: true, count: data.length });
+});
+
+app.delete('/api/participants/:id', (req, res) => {
+    try {
+        db.prepare('DELETE FROM participants WHERE id = ?').run(req.params.id);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
 // --- TASKS (UNIFIED) ---
