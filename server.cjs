@@ -141,6 +141,47 @@ app.post('/api/participants/import', (req, res) => {
     res.json({ success: true, count: data.length });
 });
 
+// Register new participant
+app.post('/api/participants', (req, res) => {
+    const p = req.body;
+    
+    // Check for duplicate CPF
+    if (p.cpf) {
+        const existing = db.prepare('SELECT id FROM participants WHERE cpf = ?').get(p.cpf);
+        if (existing) {
+            return res.status(400).json({ error: 'CPF já cadastrado.' });
+        }
+    }
+
+    const id = p.id || Math.random().toString(36).substr(2, 9);
+
+    const insert = db.prepare(`
+        INSERT INTO participants (
+            id, type, name, email, phone, cpf, birthday, gender, nationality,
+            passport, passportIssueDate, passportExpiryDate, passportPhoto,
+            usVisa, usVisaExpiry, city, uf, airport, tour, allergies,
+            restrictions, medicalConditions, mobilityAssistance, mobilityDetails,
+            emergencyName, emergencyRelationship, emergencyPhone, titularName, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    try {
+        insert.run(
+            id, p.type || 'Titular', p.name, p.email, p.phone, p.cpf, p.birthday, p.gender, p.nationality,
+            p.passport, p.passportIssueDate, p.passportExpiryDate, p.passportPhoto || '',
+            p.usVisa || 'Não', p.usVisaExpiry || '', p.city, p.uf, p.airport, p.tour || 'Pendente',
+            p.allergies || '', p.restrictions || '', p.medicalConditions || '', 
+            p.mobilityAssistance || 'Não', p.mobilityDetails || '',
+            p.emergencyName || '', p.emergencyRelationship || '', p.emergencyPhone || '',
+            p.titularName || '', p.status || 'Confirmado'
+        );
+        res.status(201).json({ id, message: 'Sucesso!' });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Erro ao salvar participante.' });
+    }
+});
+
 app.delete('/api/participants/:id', (req, res) => {
     try {
         db.prepare('DELETE FROM participants WHERE id = ?').run(req.params.id);
