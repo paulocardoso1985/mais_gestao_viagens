@@ -12,6 +12,27 @@ const dbPath = path.join(dbDir, 'data.db');
 const db = new Database(dbPath);
 
 // Initialize tables
+// Special Migration for RSVP Evolution (Demo Fair)
+try {
+  const tableInfo = db.prepare("PRAGMA table_info(participants)").all();
+  const hasBirthday = tableInfo.some(col => col.name === 'birthday');
+  if (tableInfo.length > 0 && !hasBirthday) {
+    console.log('Old participants schema detected. Dropping table for RSVP Pro migration...');
+    db.exec("DROP TABLE participants");
+  }
+} catch (e) {
+  // Table might not exist yet, which is fine
+}
+
+try {
+  const tableInfo = db.prepare("PRAGMA table_info(users)").all();
+  const hasEmail = tableInfo.some(col => col.name === 'email');
+  if (tableInfo.length > 0 && !hasEmail) {
+    console.log('Old users schema detected. Dropping table for migration...');
+    db.exec("DROP TABLE users");
+  }
+} catch (e) {}
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
