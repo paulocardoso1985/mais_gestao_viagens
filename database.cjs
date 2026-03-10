@@ -85,6 +85,8 @@ db.exec(`
     module TEXT,
     item TEXT
   );
+`);
+
 // Seed default admin if empty
 const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get().count;
 if (userCount === 0) {
